@@ -1,0 +1,17 @@
+node_modules
+.env
+.DS_Store
+dist
+*.log
+uploads/*
+!uploads/.gitkeep
+frontend/node_modules
+frontend/dist
+scratch/
+test model/manual_test.py
+test model/minimal_test.py
+test model/smart_manual_test.py
+test model/terminal_test.py
+test model/test_ml_model.py
+ezgif-*.zip
+*.mp4
