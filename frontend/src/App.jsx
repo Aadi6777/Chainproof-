@@ -26,15 +26,27 @@ function AppRoutes() {
     <Routes>
       {/* ── Public full-page routes (own header/footer) ── */}
       <Route path="/about" element={<AboutPage />} />
-      <Route path="/login" element={<Login />} />
       <Route path="/driver-scan" element={<DriverScan />} />
+      
+      {/* Login is now the Home Page at "/" */}
+      <Route path="/" element={!user ? <Login /> : (
+        <Navigate to={
+          user.role === 'mediator' ? "/handoff" : 
+          user.role === 'consumer' ? "/consumer" : "/dashboard"
+        } />
+      )} />
 
       {/* ── Authenticated routes (shared Navbar + layout) ── */}
       <Route path="/*" element={
         <>
           <Navbar />
-          <div className="layout-container">
+          <div className="layout-container" style={{ paddingTop: '80px' }}>
             <Routes>
+              <Route path="/dashboard" element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } />
               <Route path="/search" element={
                 <ProtectedRoute>
                   <ConsumerSearch />
@@ -43,12 +55,6 @@ function AppRoutes() {
               <Route path="/shipment/:id" element={
                 <ProtectedRoute>
                   <ShipmentDetails />
-                </ProtectedRoute>
-              } />
-              <Route path="/" element={
-                <ProtectedRoute>
-                  {user?.role === 'mediator' ? <Navigate to="/handoff" /> :
-                   user?.role === 'consumer' ? <Navigate to="/consumer" /> : <Dashboard />}
                 </ProtectedRoute>
               } />
               <Route path="/consumer" element={
@@ -71,6 +77,7 @@ function AppRoutes() {
           </div>
         </>
       } />
+      <Route path="/login" element={<Navigate to="/" />} />
     </Routes>
   );
 }
