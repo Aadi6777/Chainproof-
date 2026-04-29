@@ -35,17 +35,19 @@ export default function Login() {
 
   return (
     <div className="login-root">
-      {/* ── Full-screen looping video background ── */}
-      <video
-        className="login-video-bg"
-        src="/flow-bg.mp4"
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-      {/* Dark overlay */}
-      <div className="login-overlay" />
+      {/* ── Cinematic Video Background ── */}
+      <div className="login-video-container">
+        <video
+          className="login-video-bg"
+          autoPlay
+          loop
+          muted
+          playsInline
+        >
+          <source src="/flow-bg.mp4" type="video/mp4" />
+        </video>
+        <div className="login-video-overlay" />
+      </div>
 
       {/* ── Floating logo ── */}
       <Link to="/about" className="login-brand">
