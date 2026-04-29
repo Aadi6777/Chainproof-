@@ -37,123 +37,147 @@ export default function ConsumerDashboard() {
   ];
 
   return (
-    <div className="animate-fade-in" style={{ padding: '20px' }}>
-      <div style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontSize: '2.2rem', fontWeight: '800', letterSpacing: '-1px' }}>Hello, Customer 👋</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>Welcome to your personalized provenance portal.</p>
+    <div className="animate-fade-in" style={{ padding: '20px', color: '#fff' }}>
+      {/* ── Top Header ── */}
+      <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h1 className="login-title" style={{ fontSize: '2.4rem', margin: 0 }}>Command Center</h1>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', fontFamily: 'Space Mono', letterSpacing: '0.1em' }}>Welcome, Authorized Consumer #C-229</p>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '0.6rem', color: '#3b82f6', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Satellite Link</div>
+          <div style={{ color: '#22c55e', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="login-dot" style={{ width: 8, height: 8 }} /> Connected
+          </div>
+        </div>
       </div>
 
-      {pending.length > 0 && (
-        <div className="glass-card" style={{ marginBottom: '40px', border: '1px solid var(--color-accent)', padding: '24px' }}>
-          <h3 style={{ marginBottom: '16px', color: 'var(--color-accent)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <UserCheck size={20} /> Your Approval Needed
-          </h3>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '20px' }}>Please verify and authorize the latest handoff for your shipments.</p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {pending.map(p => (
-              <div key={p._id} style={{ background: 'white', padding: '16px', borderRadius: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', border: '1px solid var(--border-light)' }}>
-                <div>
-                  <div style={{ fontWeight: '700' }}>{p.shipmentId}</div>
-                  <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Handoff at {p.locationName} ({p.temperature}°C)</div>
-                </div>
-                <button onClick={() => setShowSignoff(p)} className="btn btn-primary" style={{ padding: '8px 20px', fontSize: '0.85rem' }}>Authorize</button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {showSignoff && (
-        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000 }}>
-          <div className="glass-card" style={{ maxWidth: '400px', width: '90%', padding: '32px' }}>
-            <h3 style={{ marginBottom: '16px' }}>Sign-off Handoff</h3>
-            <p style={{ fontSize: '0.9rem', marginBottom: '24px' }}>By authorizing, you confirm the reported state of <strong>{showSignoff.shipmentId}</strong>.</p>
-            <div style={{ height: '100px', border: '1px dashed var(--border-light)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.8rem', marginBottom: '24px' }}>
-              Digital Signature Required
-            </div>
-            <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => setShowSignoff(null)} className="btn btn-outline" style={{ flex: 1 }}>Cancel</button>
-              <button onClick={handleConsumerApprove} className="btn btn-primary" style={{ flex: 2 }}>Confirm & Sign</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '30px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '30px' }}>
         
-        {/* Search Section */}
-        <div className="glass-card" style={{ padding: '32px' }}>
-          <h3 style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <Search size={20} color="var(--color-accent)" /> Track Shipment
-          </h3>
-          <p style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', marginBottom: '24px' }}>Enter your shipment ID below to view the live truth trail.</p>
+        {/* ── LEFT: LIVE TRACKING MAP ── */}
+        <div className="login-card" style={{ padding: 0, height: '600px', position: 'relative', overflow: 'hidden' }}>
+          {/* HUD Overlay */}
+          <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 10, background: 'rgba(6, 8, 18, 0.8)', padding: '12px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+            <div style={{ fontSize: '0.6rem', color: '#3b82f6', letterSpacing: '0.1em', marginBottom: 4 }}>LIVE TELEMETRY</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>ACTIVE TRANSIT MAPPING</div>
+          </div>
+
+          <div style={{ position: 'absolute', bottom: 20, right: 20, zIndex: 10, background: 'rgba(6, 8, 18, 0.8)', padding: '12px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', fontFamily: 'Space Mono' }}>
+             LAT: 12.9716° N <br />
+             LNG: 77.5946° E
+          </div>
+
+          {/* SVG Map Simulation */}
+          <div style={{ width: '100%', height: '100%', background: '#0a0c1a', position: 'relative' }}>
+             {/* Grid */}
+             <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+             
+             <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: 'relative', zIndex: 1 }}>
+                {/* Simulated Transit Paths */}
+                <path d="M200,400 Q400,300 600,200" stroke="#3b82f6" strokeWidth="2" fill="none" strokeDasharray="8 4" opacity="0.3">
+                   <animate attributeName="stroke-dashoffset" from="120" to="0" dur="5s" repeatCount="indefinite" />
+                </path>
+                <path d="M150,200 Q300,400 500,500" stroke="#3b82f6" strokeWidth="2" fill="none" strokeDasharray="8 4" opacity="0.3">
+                   <animate attributeName="stroke-dashoffset" from="120" to="0" dur="5s" repeatCount="indefinite" />
+                </path>
+
+                {/* Pulsing Nodes */}
+                <g>
+                  <circle cx="200" cy="400" r="4" fill="#3b82f6" />
+                  <circle cx="200" cy="400" r="10" fill="none" stroke="#3b82f6" strokeWidth="1">
+                    <animate attributeName="r" from="4" to="20" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <text x="215" y="405" fill="#fff" fontSize="10" fontFamily="Space Mono">ORGIN: CHENNAI</text>
+                </g>
+
+                <g>
+                  <circle cx="600" cy="200" r="4" fill="#22c55e" />
+                  <circle cx="600" cy="200" r="10" fill="none" stroke="#22c55e" strokeWidth="1">
+                    <animate attributeName="r" from="4" to="20" dur="2s" repeatCount="indefinite" />
+                    <animate attributeName="opacity" from="1" to="0" dur="2s" repeatCount="indefinite" />
+                  </circle>
+                  <text x="615" y="205" fill="#fff" fontSize="10" fontFamily="Space Mono">CURRENT: BANGLORE</text>
+                </g>
+             </svg>
+          </div>
+        </div>
+
+        {/* ── RIGHT: HUD PANEL ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
           
-          <form onSubmit={(e) => {
-            e.preventDefault();
-            const id = e.target.shipId.value;
-            if(id) navigate(`/shipment/${id}`);
-          }} style={{ display: 'flex', gap: '10px' }}>
-            <input name="shipId" type="text" className="input-field" placeholder="SHP-XXXXX" style={{ flex: 1 }} />
-            <button type="submit" className="btn btn-primary">Track</button>
-          </form>
-
-          <div style={{ marginTop: '24px', borderTop: '1px solid var(--border-light)', paddingTop: '20px' }}>
-             <h4 style={{ fontSize: '0.9rem', marginBottom: '12px' }}>Shipment Actions</h4>
-             <button onClick={() => navigate('/handoff')} className="btn btn-outline" style={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-               <Package size={18} /> Confirm Receipt / Log Handoff
-             </button>
+          {/* Tracking Form */}
+          <div className="login-card" style={{ padding: '24px' }}>
+            <h3 style={{ marginBottom: '16px', fontSize: '0.9rem', letterSpacing: '0.1em' }}>QUICK TRACK</h3>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              const id = e.target.shipId.value;
+              if(id) navigate(`/shipment/${id}`);
+            }} style={{ display: 'flex', gap: '10px' }}>
+              <input name="shipId" type="text" className="login-input" placeholder="SHIPMENT ID" style={{ padding: '10px 14px', fontSize: '0.8rem' }} />
+              <button type="submit" className="login-btn" style={{ height: 'auto', width: 'auto', padding: '0 16px', fontSize: '0.7rem' }}>SYNC</button>
+            </form>
           </div>
-        </div>
 
-        {/* Orders Section */}
-        <div style={{ gridColumn: 'span 2' }}>
-          <h3 style={{ marginBottom: '24px' }}>My Active Shipments</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-            {myOrders.map(order => (
-              <div 
-                key={order.id} 
-                className="glass-card" 
-                style={{ 
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
-                  padding: '24px', cursor: 'pointer', transition: 'transform 0.2s' 
-                }}
-                onClick={() => navigate(`/shipment/${order.id}`)}
-                onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-                onMouseLeave={e => e.currentTarget.style.transform = 'none'}
-              >
-                <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-                  <div style={{ width: '50px', height: '50px', background: '#f0f4ff', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Package size={24} color="var(--color-accent)" />
+          {/* Pending Approvals HUD */}
+          {pending.length > 0 && (
+            <div className="login-card" style={{ padding: '24px', border: '1px solid #3b82f6', background: 'rgba(59, 130, 246, 0.05)' }}>
+              <div style={{ color: '#3b82f6', fontSize: '0.7rem', letterSpacing: '0.2em', marginBottom: '12px' }}>PENDING VERIFICATION</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {pending.map(p => (
+                  <div key={p._id} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: '0.8rem' }}>{p.shipmentId}</div>
+                    <button onClick={() => setShowSignoff(p)} className="login-btn" style={{ height: 'auto', width: 'auto', padding: '6px 12px', fontSize: '0.6rem' }}>AUTHORIZE</button>
                   </div>
-                  <div>
-                    <div style={{ fontWeight: '800', fontSize: '1.1rem' }}>{order.id}</div>
-                    <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>{order.item}</div>
-                  </div>
-                </div>
-                
-                <div style={{ display: 'flex', gap: '40px', alignItems: 'center' }}>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Status</div>
-                    <div style={{ color: order.status === 'Delivered' ? 'var(--color-green)' : 'var(--color-accent)', fontWeight: '700' }}>{order.status}</div>
-                  </div>
-                  <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '0.75rem', fontWeight: '800', color: 'var(--text-muted)', textTransform: 'uppercase' }}>Current Location</div>
-                    <div style={{ fontWeight: '600' }}><MapPin size={14} /> {order.location}</div>
-                  </div>
-                  <ArrowRight size={20} color="var(--border-light)" />
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
 
+          {/* Shipment List HUD */}
+          <div className="login-card" style={{ padding: '24px', flex: 1 }}>
+            <h3 style={{ marginBottom: '20px', fontSize: '0.9rem', letterSpacing: '0.1em' }}>MY SHIPMENTS</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {myOrders.map(order => (
+                <div 
+                  key={order.id} 
+                  className="login-driver-btn" 
+                  style={{ justifyContent: 'space-between', padding: '16px', textAlign: 'left', height: 'auto' }}
+                  onClick={() => navigate(`/shipment/${order.id}`)}
+                >
+                  <div>
+                    <div style={{ color: '#fff', fontSize: '0.85rem' }}>{order.id}</div>
+                    <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)' }}>{order.item}</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: order.status === 'Delivered' ? '#22c55e' : '#3b82f6', fontSize: '0.7rem' }}>{order.status}</div>
+                    <div style={{ fontSize: '0.6rem', opacity: 0.5 }}>{order.location}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
 
-      <div className="glass-card" style={{ marginTop: '40px', padding: '24px', background: 'linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%)', border: 'none' }}>
-        <h4 style={{ marginBottom: '8px' }}>🛡️ Blockchain Verified</h4>
-        <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-          All data shown here is cross-referenced with the Ethereum Mainnet. We ensure that your perishable goods remain within safe temperature limits throughout their journey.
-        </p>
+      {/* Signature Modal Overlay */}
+      {showSignoff && (
+        <div className="face-success-overlay" style={{ background: 'rgba(6, 8, 18, 0.95)' }}>
+          <div className="login-card" style={{ maxWidth: '440px', width: '90%', padding: '40px' }}>
+            <div className="face-hud-top" style={{ position: 'static', marginBottom: 20 }}>CRYPTO-SIGNATURE REQUIRED</div>
+            <p style={{ textAlign: 'center', fontSize: '0.8rem', color: 'rgba(255,255,255,0.5)', marginBottom: 30 }}>Authorize provenance audit for <strong>{showSignoff.shipmentId}</strong>?</p>
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => setShowSignoff(null)} className="login-driver-btn" style={{ flex: 1 }}>ABORT</button>
+              <button onClick={handleConsumerApprove} className="login-btn" style={{ flex: 2 }}>GENERATE SIGNATURE</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer Branding */}
+      <div style={{ marginTop: '40px', textAlign: 'center', opacity: 0.3 }}>
+         <div style={{ fontSize: '0.6rem', letterSpacing: '0.3em', textTransform: 'uppercase' }}>Blockchain Verified · Real-Time Provenance · IoT Integrated</div>
       </div>
     </div>
   );
