@@ -15,3 +15,4 @@ test model/terminal_test.py
 test model/test_ml_model.py
 ezgif-*.zip
 *.mp4
+!frontend/public/flow-bg.mp4

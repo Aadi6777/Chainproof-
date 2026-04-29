@@ -11,6 +11,7 @@ import ConsumerSearch from './pages/ConsumerSearch';
 import ConsumerDashboard from './pages/ConsumerDashboard';
 import DriverScan from './pages/DriverScan';
 import AboutPage from './pages/AboutPage';
+import FaceVerification from './pages/FaceVerification';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
@@ -27,6 +28,7 @@ function AppRoutes() {
       {/* ── Public full-page routes (own header/footer) ── */}
       <Route path="/about" element={<AboutPage />} />
       <Route path="/driver-scan" element={<DriverScan />} />
+      <Route path="/face-verify" element={<FaceVerification />} />
       
       {/* Login is now the Home Page at "/" */}
       <Route path="/" element={!user ? <Login /> : (

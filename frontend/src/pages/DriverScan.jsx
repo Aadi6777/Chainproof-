@@ -28,9 +28,8 @@ export default function DriverScan() {
         (decodedText) => {
           setShipmentId(decodedText);
           stopCamera();
-          // After scan, take driver to the handoff entry page
-          // Even if not logged in, we let them enter data, but finalization requires manager/consumer
-          navigate(`/handoff?id=${decodedText.trim()}`);
+          // After scan, go to Face Verification step
+          navigate(`/face-verify?id=${decodedText.trim()}`);
         },
         () => {}
       );
