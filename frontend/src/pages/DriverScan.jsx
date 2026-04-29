@@ -48,33 +48,43 @@ export default function DriverScan() {
   };
 
   return (
-    <div style={{ padding: '20px', maxWidth: '500px', margin: '0 auto' }}>
-      <button onClick={() => navigate('/login')} className="btn btn-outline" style={{ marginBottom: '24px' }}>
-        <ArrowLeft size={16} /> Back to Portal
-      </button>
+    <div className="login-root">
+      {/* ── Cinematic Background ── */}
+      <div className="login-video-container">
+        <div className="login-video-overlay" style={{ background: 'radial-gradient(circle at center, transparent 0%, rgba(6, 8, 18, 0.9) 100%)' }} />
+      </div>
 
-      <div className="glass-card animate-fade-in" style={{ textAlign: 'center', padding: '40px 24px' }}>
-        <div style={{ width: '64px', height: '64px', background: '#f0f4ff', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
-          <Truck size={32} color="var(--color-accent)" />
-        </div>
+      <div style={{ position: 'relative', z-index: 10, width: '100%', maxWidth: '480px', padding: '20px' }}>
+        <button onClick={() => navigate('/')} className="login-driver-btn" style={{ marginBottom: '24px', width: 'auto', padding: '10px 20px' }}>
+          <ArrowLeft size={16} /> Back to Portal
+        </button>
 
-        <h1 style={{ fontSize: '1.5rem', fontWeight: '800', marginBottom: '8px' }}>Driver Quick Scan</h1>
-        <p style={{ color: 'var(--text-secondary)', marginBottom: '32px', fontSize: '0.9rem' }}>Scan the package QR code to initiate a handoff record.</p>
+        <div className="login-card animate-fade-in" style={{ textAlign: 'center' }}>
+          <div style={{ width: '64px', height: '64px', background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.3)', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px', boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)' }}>
+            <Truck size={32} color="#3b82f6" />
+          </div>
 
-        <div id="driver-reader" style={{ width: '100%', marginBottom: isScanning ? '24px' : '0', borderRadius: '12px', overflow: 'hidden' }}></div>
+          <h1 className="login-title" style={{ fontSize: '1.8rem' }}>Logistics Scan</h1>
+          <p className="login-subtitle" style={{ marginBottom: '32px' }}>Initialize handoff by scanning the package QR code.</p>
 
-        {!isScanning ? (
-          <button onClick={startCamera} className="btn btn-primary" style={{ width: '100%', height: '60px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', fontSize: '1.1rem' }}>
-            <Camera size={24} /> Start Scanning
-          </button>
-        ) : (
-          <button onClick={stopCamera} className="btn btn-outline" style={{ width: '100%', color: 'var(--color-red)' }}>Cancel</button>
-        )}
+          <div id="driver-reader" style={{ width: '100%', marginBottom: isScanning ? '24px' : '0', borderRadius: '16px', overflow: 'hidden', border: isScanning ? '1px solid rgba(255,255,255,0.1)' : 'none' }}></div>
 
-        <div style={{ marginTop: '32px', padding: '16px', background: '#f8fafc', borderRadius: '12px', border: '1px solid var(--border-light)' }}>
-          <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', margin: 0 }}>
-            🛡️ <strong>Secure Entry:</strong> Records initiated here will be queued for Manager and Consumer verification.
-          </p>
+          {!isScanning ? (
+            <button onClick={startCamera} className="login-btn" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px' }}>
+              <Camera size={24} /> Start Secure Scan
+            </button>
+          ) : (
+            <button onClick={stopCamera} className="login-driver-btn" style={{ borderColor: 'rgba(239, 68, 68, 0.4)', color: '#fca5a5' }}>Cancel Scan</button>
+          )}
+
+          <div style={{ marginTop: '32px', padding: '16px', background: 'rgba(255, 255, 255, 0.03)', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#22c55e', fontSize: '0.65rem', fontFamily: 'Space Mono', letterSpacing: '0.1em', marginBottom: '4px' }}>
+              <Package size={12} /> ENCRYPTED DATA CHANNEL
+            </div>
+            <p style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', margin: 0, textAlign: 'left' }}>
+              Records initiated here will trigger mandatory **Biometric Identity Verification** before being anchored to the blockchain.
+            </p>
+          </div>
         </div>
       </div>
     </div>
