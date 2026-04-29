@@ -62,8 +62,8 @@ export default function FaceVerification() {
   const handleSuccess = () => {
     setIsVerified(true);
     setTimeout(() => {
-      // Navigate to handoff page with the shipment ID
-      navigate(`/handoff?id=${shipmentId}&verified=true`);
+      // Identity verified, now proceed to scan the package
+      navigate('/driver-scan?verified=true');
     }, 2500);
   };
 

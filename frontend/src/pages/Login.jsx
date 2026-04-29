@@ -143,11 +143,11 @@ export default function Login() {
 
           {/* Driver shortcut */}
           <button
-            onClick={() => navigate('/driver-scan')}
+            onClick={() => navigate('/face-verify')}
             className="login-driver-btn"
           >
             <Search size={15} />
-            Quick QR Scan — Driver / Mediator
+            Quick Biometric Login — Driver / Mediator
           </button>
 
           {/* Footer link */}
