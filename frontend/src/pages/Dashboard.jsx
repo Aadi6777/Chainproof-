@@ -114,130 +114,122 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="animate-fade-in" style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '24px', height: 'calc(100vh - 120px)' }}>
-      
-      <div className="glass-card" style={{ padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ padding: '16px 24px', borderBottom: '1px solid var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: '1.2rem', margin: 0, color: 'var(--text-primary)' }}>📍 AI Logistics Command Center</h2>
-          <div style={{ display: 'flex', gap: '12px', fontSize: '0.85rem' }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--color-green)' }}></span> Safe</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--color-amber)' }}></span> Warning</span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--color-red)' }}></span> Critical</span>
-          </div>
+    <div className="animate-fade-in" style={{ padding: '20px', color: '#fff' }}>
+      {/* ── Top Header ── */}
+      <div style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h1 className="login-title" style={{ fontSize: '2.4rem', margin: 0 }}>Global Command</h1>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', fontFamily: 'Space Mono', letterSpacing: '0.1em' }}>Strategic Overview — Active Fleet #AF-88</p>
         </div>
-        <div style={{ flex: 1 }}>
-          <MapContainer center={[20.5937, 78.9629]} zoom={5} style={{ height: '100%', width: '100%' }}>
-            <TileLayer 
-              url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" 
-              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            />
-            {shipments.map(s => (
-              <React.Fragment key={s._id}>
-                {s.currentLocation && (
-                  <Marker position={[s.currentLocation.lat, s.currentLocation.lng]} icon={icons[s.status] || icons.green}>
-                    <Popup>
-                      <div style={{ minWidth: '150px' }}>
-                        <div style={{ fontWeight: 'bold', fontSize: '1rem', color: 'var(--color-accent)', marginBottom: '4px' }}>{s.shipmentId}</div>
-                        <div style={{ fontSize: '0.85rem', marginBottom: '8px' }}>{s.goodsType.toUpperCase()}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                          Temp: <strong>{s.currentTemperature?.toFixed(1)}°C</strong><br/>
-                          Est. Life: <strong>{s.shelfLifeDays} Days</strong>
-                        </div>
-                        <Link to={`/shipment/${s.shipmentId}`} style={{ display: 'block', marginTop: '10px', fontSize: '0.8rem', fontWeight: 'bold' }}>Detailed Analysis →</Link>
-                      </div>
-                    </Popup>
-                  </Marker>
-                )}
-                {s.destCoords && (
-                  <Marker position={[s.destCoords.lat, s.destCoords.lng]} icon={new L.Icon({
-                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-grey.png',
-                    iconSize: [25, 41],
-                    iconAnchor: [12, 41],
-                    popupAnchor: [1, -34],
-                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                    shadowSize: [41, 41]
-                  })}>
-                    <Popup>Destination: {s.destination}</Popup>
-                  </Marker>
-                )}
-                <RoadRoute shipment={s} />
-              </React.Fragment>
-            ))}
-          </MapContainer>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: '0.6rem', color: '#3b82f6', letterSpacing: '0.2em', textTransform: 'uppercase' }}>Satellite Link</div>
+          <div style={{ color: '#22c55e', fontSize: '0.9rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <span className="login-dot" style={{ width: 8, height: 8 }} /> Multi-Node Connected
+          </div>
         </div>
       </div>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto' }}>
-        {anomalies.length > 0 && (
-          <div>
-            <h3 style={{ marginBottom: '12px', color: 'var(--color-red)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertTriangle size={20} /> Action Required
-            </h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              {anomalies.map(a => (
-                <div key={a._id} className="glass-card" style={{ border: `1px solid var(--color-${a.status})`, padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <strong style={{ color: `var(--color-${a.status})` }}>{a.shipmentId}</strong>
-                    <span style={{ fontWeight: 'bold' }}>{a.currentTemperature?.toFixed(1)}°C</span>
-                  </div>
-                  <p style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: '12px' }}>
-                    {a.statusMessage}
-                  </p>
-                  
-                  {a.status === 'red' && !a.isRerouted && (
-                    <button className="btn" style={{ background: 'var(--color-amber)', color: 'black', width: '100%', fontSize: '0.85rem' }} onClick={() => handleReroute(a.shipmentId)}>
-                      Approve Reroute to Cold Storage
-                    </button>
-                  )}
-                  {a.isRerouted && (
-                    <div style={{ fontSize: '0.85rem', color: 'var(--color-amber)', display: 'flex', alignItems: 'center', gap: '6px' }}>
-                      <CheckCircle size={14} /> Reroute Approved
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '30px' }}>
+        
+        {/* ── LEFT: GLOBAL FLEET MAP ── */}
+        <div className="login-card" style={{ padding: 0, height: '650px', position: 'relative', overflow: 'hidden' }}>
+          {/* HUD Overlay */}
+          <div style={{ position: 'absolute', top: 20, left: 20, zIndex: 10, background: 'rgba(6, 8, 18, 0.8)', padding: '12px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)' }}>
+            <div style={{ fontSize: '0.6rem', color: '#3b82f6', letterSpacing: '0.1em', marginBottom: 4 }}>STRATEGIC OVERVIEW</div>
+            <div style={{ fontSize: '1.1rem', fontWeight: 700 }}>REAL-TIME FLEET TELEMETRY</div>
+          </div>
+
+          <div style={{ position: 'absolute', bottom: 20, right: 20, zIndex: 10, background: 'rgba(6, 8, 18, 0.8)', padding: '12px 20px', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', backdropFilter: 'blur(10px)', fontSize: '0.7rem', color: 'rgba(255,255,255,0.5)', fontFamily: 'Space Mono' }}>
+             FLEET NODES: {shipments.length} <br />
+             ACTIVE ALERTS: {anomalies.length}
+          </div>
+
+          {/* SVG Map Simulation */}
+          <div style={{ width: '100%', height: '100%', background: '#0a0c1a', position: 'relative' }}>
+             <div style={{ position: 'absolute', inset: 0, backgroundImage: 'radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+             
+             <svg width="100%" height="100%" viewBox="0 0 800 600" style={{ position: 'relative', zIndex: 1 }}>
+                {shipments.map((s, idx) => (
+                  <g key={s._id}>
+                    {/* Simplified connection line for every 2nd shipment for visual flair */}
+                    {idx % 2 === 0 && (
+                      <path d={`M${150 + idx*50},${400 - idx*20} Q400,300 ${600 - idx*30},${200 + idx*20}`} stroke="#3b82f6" strokeWidth="1" fill="none" strokeDasharray="5 5" opacity="0.2">
+                        <animate attributeName="stroke-dashoffset" from="100" to="0" dur="4s" repeatCount="indefinite" />
+                      </path>
+                    )}
+                    
+                    {/* Shipment Node */}
+                    <circle cx={200 + (idx * 40 % 400)} cy={150 + (idx * 60 % 300)} r="3" fill={s.status === 'red' ? '#ef4444' : '#3b82f6'} />
+                    <circle cx={200 + (idx * 40 % 400)} cy={150 + (idx * 60 % 300)} r="10" fill="none" stroke={s.status === 'red' ? '#ef4444' : '#3b82f6'} strokeWidth="1">
+                      <animate attributeName="r" from="3" to="15" dur="3s" repeatCount="indefinite" />
+                      <animate attributeName="opacity" from="1" to="0" dur="3s" repeatCount="indefinite" />
+                    </circle>
+                  </g>
+                ))}
+             </svg>
+          </div>
+        </div>
+
+        {/* ── RIGHT: OPERATIONAL HUD ── */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', overflowY: 'auto', maxHeight: '650px' }}>
+          
+          {/* Action Alerts HUD */}
+          {anomalies.length > 0 && (
+            <div className="login-card" style={{ padding: '24px', border: '1px solid #ef4444', background: 'rgba(239, 68, 68, 0.05)' }}>
+              <div style={{ color: '#ef4444', fontSize: '0.7rem', letterSpacing: '0.2em', marginBottom: '12px' }}>CRITICAL ANOMALIES</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                {anomalies.map(a => (
+                  <div key={a._id} style={{ background: 'rgba(255,255,255,0.03)', padding: '12px', borderRadius: '8px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>{a.shipmentId}</div>
+                      <div style={{ color: '#ef4444', fontSize: '0.8rem' }}>{a.currentTemperature?.toFixed(1)}°C</div>
                     </div>
-                  )}
+                    <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)', marginBottom: '12px' }}>{a.statusMessage}</div>
+                    
+                    {!a.isRerouted && a.status === 'red' && (
+                      <button onClick={() => handleReroute(a.shipmentId)} className="login-btn" style={{ height: 'auto', padding: '8px', fontSize: '0.6rem', background: '#f59e0b', color: '#000' }}>REROUTE TO COLD STORAGE</button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Active Fleet List */}
+          <div className="login-card" style={{ padding: '24px', flex: 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+               <h3 style={{ fontSize: '0.9rem', letterSpacing: '0.1em', margin: 0 }}>ACTIVE FLEET</h3>
+               <Link to="/handoff" className="login-btn" style={{ height: 'auto', width: 'auto', padding: '6px 12px', fontSize: '0.6rem', border: '1px solid rgba(255,255,255,0.1)' }}>NEW RECORD</Link>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {shipments.map(s => (
+                <div 
+                  key={s._id} 
+                  className="login-driver-btn" 
+                  style={{ justifyContent: 'space-between', padding: '16px', textAlign: 'left', height: 'auto' }}
+                  onClick={() => navigate(`/shipment/${s.shipmentId}`)}
+                >
+                  <div>
+                    <div style={{ color: '#fff', fontSize: '0.85rem' }}>{s.shipmentId}</div>
+                    <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.4)' }}>{s.origin} → {s.destination}</div>
+                  </div>
+                  <div style={{ textAlign: 'right' }}>
+                    <div style={{ color: s.status === 'red' ? '#ef4444' : '#3b82f6', fontSize: '0.7rem' }}>{s.status.toUpperCase()}</div>
+                    <div style={{ fontSize: '0.6rem', opacity: 0.5 }}>{s.shelfLifeDays} DAYS LIFE</div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        )}
 
-        <div>
-          <h3 style={{ marginBottom: '12px', color: 'var(--text-primary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            Active Fleet 
-            <span style={{ fontSize: '0.7rem', color: 'var(--text-muted)', fontWeight: '400' }}>Auto-cleans (30s)</span>
-          </h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            {shipments.map(s => {
-              // Simple check: if shipment is older than 30s (simulated for demo)
-              // In a real app, you'd compare with createdAt. For demo, we just show them.
-              return (
-                <div key={s._id} className="glass-card" style={{ padding: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <Link to={`/shipment/${s.shipmentId}`} style={{ textDecoration: 'none', color: 'inherit', flex: 1 }}>
-                    <div>
-                      <h4 style={{ margin: 0, color: 'var(--text-primary)' }}>{s.shipmentId}</h4>
-                      <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{s.origin} → {s.destination}</span>
-                    </div>
-                  </Link>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                    <StatusBadge status={s.status} />
-                    <button 
-                      onClick={async () => {
-                        if(window.confirm('Erase this fleet record permanently?')) {
-                          await deleteShipment(s._id);
-                          load();
-                        }
-                      }}
-                      style={{ background: 'none', border: 'none', color: '#ef4444', cursor: 'pointer', padding: '4px' }}
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
         </div>
       </div>
 
+      {/* Footer Branding */}
+      <div style={{ marginTop: '40px', textAlign: 'center', opacity: 0.3 }}>
+         <div style={{ fontSize: '0.6rem', letterSpacing: '0.3em', textTransform: 'uppercase' }}>AI-Logistics Nexus · Enterprise Grade · Multi-Node Blockchain</div>
+      </div>
     </div>
   );
 }
