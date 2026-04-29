@@ -54,7 +54,7 @@ export default function DriverScan() {
         <div className="login-video-overlay" style={{ background: 'radial-gradient(circle at center, transparent 0%, rgba(6, 8, 18, 0.9) 100%)' }} />
       </div>
 
-      <div style={{ position: 'relative', z-index: 10, width: '100%', maxWidth: '480px', padding: '20px' }}>
+      <div style={{ position: 'relative', zIndex: 10, width: '100%', maxWidth: '480px', padding: '20px' }}>
         <button onClick={() => navigate('/')} className="login-driver-btn" style={{ marginBottom: '24px', width: 'auto', padding: '10px 20px' }}>
           <ArrowLeft size={16} /> Back to Portal
         </button>
